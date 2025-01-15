@@ -81,7 +81,7 @@
   let b_InitComplete = sessionStorage.getItem('b_InitComplete');
   if (b_InitComplete != 'true') {
     sessionStorage.setItem('b_InitComplete', 'true');
-    document.getElementById('zip_time').innerHTML = 0.000.toFixed(3).padStart(7, " ") + " sec";
+    document.getElementById('zip_time').innerHTML = 0.000.toFixed(3).padStart(7, ' ') + ' sec';
   }
 
   main_loop();
@@ -97,7 +97,7 @@
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
           let resp_json = JSON.parse(this.responseText);
-          document.getElementById('zip_time').innerHTML = parseFloat(resp_json.zip_time).toFixed(3).padStart(7, " ") + " sec";
+          document.getElementById('zip_time').innerHTML = parseFloat(resp_json.zip_time).toFixed(3).padStart(7, ' ') + ' sec';
         }
       };
       xhttp.open('GET', str_url, true);
@@ -108,7 +108,7 @@
 
   function Reset() {
     sessionStorage.setItem('Cnt_Loops', 0);
-    document.getElementById('zip_time').innerHTML = 0.000.toFixed(3).padStart(7, " ") + " sec";
+    document.getElementById('zip_time').innerHTML = 0.000.toFixed(3).padStart(7, ' ') + ' sec';
   }
 
   function beep() {
