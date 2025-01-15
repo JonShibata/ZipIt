@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "thermostat.h": "c"
+    },
+    "editor.tabSize": 2
+}
