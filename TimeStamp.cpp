@@ -1,16 +1,12 @@
+#include <stdint.h>
 
 #include "TimeStamp.hpp"
 
-class TimeStamp {
-  private:
 
-  void SetStamp(int time_in) {
-    time = time_in;
-  }
+void TimeStamp::SetStamp(uint32_t time_in) {
+  time = time_in;
+}
 
-  int GetStamp() {
-    return time;
-  }
-
-  int time;
-};
+uint32_t TimeStamp::GetStamp() {
+  return time;
+}

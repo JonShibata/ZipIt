@@ -2,7 +2,8 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include TimeStamp.hpp
+#include "TimeStamp.hpp"
+#include <stdint.h>
 
 #include "html.h"
 
@@ -31,8 +32,8 @@ void setup() {
   pinMode(startPin, INPUT_PULLUP);
   pinMode(stopPin, INPUT_PULLUP);
 
-  startTime.setStamp(millis());
-  stopTime.setStamp(startTime.getStamp());
+  startTime.SetStamp(millis());
+  stopTime.SetStamp(startTime.GetStamp());
 
   if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
@@ -46,7 +47,6 @@ void setup() {
   server.begin();
   Serial.println("Server started");
   Serial.println(WiFi.localIP());
-
 
   // Initialize core 0
   xTaskCreatePinnedToCore(
@@ -76,17 +76,16 @@ void loop() {}
 void taskCore0(void* parameter) {
   // Code to run on core 0
   while (true) {
-
     bool isStart = digitalRead(startPin);
     if (isStart == LOW) {
-      startTime.setStamp(millis());
+      Serial.println(">>> Start time set");
+      startTime.SetStamp(millis());
     }
 
     bool isStop = digitalRead(stopPin);
     if (isStop == LOW) {
-
-      stopTime.setStamp(millis());
-
+      Serial.println("<<< Stop time set");
+      stopTime.SetStamp(millis());
       ProcessUpdates();
     }
   }
@@ -100,34 +99,24 @@ void taskCore1(void* parameter) {
   }
 }
 
-
 void ProcessUpdates() {
-
-  bool b_respond = true;
-
   String reset = server.arg("reset");
   if (reset == "1" || reset == "True" || reset == "true") {
-    startTime.setStamp(millis());
+    startTime.SetStamp(millis());
+    stopTime.SetStamp(startTime.GetStamp());
   } else if (reset == "0" || reset == "False" || reset == "false") {
-    serial.println("Reset is false");
+    Serial.println("Reset is false");
   }
 
-  int delta = stopTime.getStamp() - startTime.getStamp();
-
+  uint32_t delta = stopTime.GetStamp() - startTime.GetStamp();
   char zip_time[9];
-
-  sprintf(zip_time, "%6.3f", delta.toSeconds());
-
-  String s = "{\"zip_time\":" + zip_time + "}";
-
+  sprintf(zip_time, "%7.3f", delta / 1000.0); 
+  String s = "{\"zip_time\":" + String(zip_time) + "}";
   server.send(200, "application/json", s);
-
   Serial.println(s);
 }
 
-
 void ProcessRoot() {
-
   server.send(200, "text/html", char_html);
   Serial.println("got request from device");
 }
