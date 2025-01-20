@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include "TimeStamp.hpp"
+#include "src/TimeStamp/src/TimeStamp.hpp"
 #include <stdint.h>
 
 #include "html.h"
@@ -32,8 +32,8 @@ void setup() {
   pinMode(startPin, INPUT_PULLUP);
   pinMode(stopPin, INPUT_PULLUP);
 
-  startTime.SetStamp(millis());
-  stopTime.SetStamp(startTime.GetStamp());
+  startTime.setStamp(millis());
+  stopTime.setStamp(startTime.getStamp());
 
   if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
@@ -79,13 +79,13 @@ void taskCore0(void* parameter) {
     bool isStart = digitalRead(startPin);
     if (isStart == LOW) {
       Serial.println(">>> Start time set");
-      startTime.SetStamp(millis());
+      startTime.setStamp(millis());
     }
 
     bool isStop = digitalRead(stopPin);
     if (isStop == LOW) {
       Serial.println("<<< Stop time set");
-      stopTime.SetStamp(millis());
+      stopTime.setStamp(millis());
       ProcessUpdates();
     }
   }
@@ -102,13 +102,13 @@ void taskCore1(void* parameter) {
 void ProcessUpdates() {
   String reset = server.arg("reset");
   if (reset == "1" || reset == "True" || reset == "true") {
-    startTime.SetStamp(millis());
-    stopTime.SetStamp(startTime.GetStamp());
+    startTime.setStamp(millis());
+    stopTime.setStamp(startTime.getStamp());
   } else if (reset == "0" || reset == "False" || reset == "false") {
     Serial.println("Reset is false");
   }
 
-  uint32_t delta = stopTime.GetStamp() - startTime.GetStamp();
+  uint32_t delta = stopTime.getStamp() - startTime.getStamp();
   char zip_time[9];
   sprintf(zip_time, "%7.3f", delta / 1000.0); 
   String s = "{\"zip_time\":" + String(zip_time) + "}";
