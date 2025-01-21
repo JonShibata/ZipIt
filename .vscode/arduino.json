@@ -2,7 +2,7 @@
     "programmer": "AVRISP mkII",
     "board": "esp32:esp32:XIAO_ESP32C6",
     "configuration": "JTAGAdapter=default,CDCOnBoot=cdc,PartitionScheme=default,CPUFreq=160,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,DebugLevel=none,EraseFlash=none,ZigbeeMode=default",
-    "port": "/dev/ttyS3",
+    "port": "/dev/ttyACM0",
     "sketch": "ZipIt.ino",
     "output": "../ZipItBuild"
 }

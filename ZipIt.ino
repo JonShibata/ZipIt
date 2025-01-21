@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include "src/TimeStamp/src/TimeStamp.hpp"
+#include "src/Timestamp/src/TimeStamp.hpp"
 #include <stdint.h>
 
 #include "html.h"
@@ -13,7 +13,7 @@ const char* password = "";
 const int startPin = D0;
 const int stopPin = D2;
 
-IPAddress local_IP(192, 168, 4, 2);
+IPAddress local_IP(192, 168, 4, 1);
 IPAddress gateway(192, 168, 1, 1);
 IPAddress subnet(255, 255, 0, 0);
 
@@ -21,6 +21,9 @@ WebServer server(80);
 
 TimeStamp startTime;
 TimeStamp stopTime;
+
+int isStartPrev = 0;
+int isStopPrev = 0;
 
 
 void setup() {
@@ -49,25 +52,23 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   // Initialize core 0
-  xTaskCreatePinnedToCore(
+  xTaskCreate(
           taskCore0,    // Function to run on core 0
           "taskCore0",  // Name of the task
           10000,        // Stack size (bytes)
           NULL,         // Parameter to pass to the task
           1,            // Priority (0 = lowest, 1 = default, 2 = highest)
-          NULL,         // Task handle
-          0             // Core to run the task on (0 or 1)
+          NULL          // Task handle
   );
 
   // Initialize core 1
-  xTaskCreatePinnedToCore(
+  xTaskCreate(
           taskCore1,    // Function to run on core 1
           "taskCore1",  // Name of the task
           10000,        // Stack size (bytes)
           NULL,         // Parameter to pass to the task
           1,            // Priority
-          NULL,         // Task handle
-          1             // Core to run the task on (0 or 1)
+          NULL          // Task handle
   );
 }
 
@@ -76,25 +77,29 @@ void loop() {}
 void taskCore0(void* parameter) {
   // Code to run on core 0
   while (true) {
-    bool isStart = digitalRead(startPin);
-    if (isStart == LOW) {
+    int isStart = digitalRead(startPin);
+    if (isStart == LOW && isStartPrev == HIGH) {
       Serial.println(">>> Start time set");
       startTime.setStamp(millis());
-    }
-
-    bool isStop = digitalRead(stopPin);
-    if (isStop == LOW) {
-      Serial.println("<<< Stop time set");
       stopTime.setStamp(millis());
       ProcessUpdates();
     }
+    isStartPrev = isStart;
+
+    bool isStop = digitalRead(stopPin);
+    if (isStop == LOW && isStopPrev == HIGH) {
+      Serial.println("<<< Stop time set");
+      stopTime.setStamp(millis());
+      uint32_t delta = stopTime.getStamp() - startTime.getStamp();
+      ProcessUpdates();
+    }
+    isStopPrev = isStop;
   }
 }
 
 void taskCore1(void* parameter) {
   // Code to run on core 1
   while (true) {
-
     server.handleClient();
   }
 }
