@@ -4,8 +4,10 @@
 #include <WebServer.h>
 #include "src/Timestamp/src/TimeStamp.hpp"
 #include <stdint.h>
+#include <LittleFS.h>
 
-#include "html.h"
+TaskHandle_t Task0;
+TaskHandle_t Task1;
 
 const char* ssid = "ZipIt";
 const char* password = "";
@@ -25,6 +27,18 @@ TimeStamp stopTime;
 int isStartPrev = 0;
 int isStopPrev = 0;
 
+void listLittleFsFiles() {
+  Serial.println("Listing LittleFS files:");
+  File root = LittleFS.open("/");
+  File file = root.openNextFile();
+  while (file) {
+    Serial.print("FILE: ");
+    Serial.print(file.name());
+    Serial.print(" SIZE: ");
+    Serial.println(file.size());
+    file = root.openNextFile();
+  }
+}
 
 void setup() {
   Serial.begin(115200);
@@ -38,6 +52,10 @@ void setup() {
   startTime.setStamp(millis());
   stopTime.setStamp(startTime.getStamp());
 
+  if (!LittleFS.begin(true)) {
+    Serial.println("An Error has occurred while mounting LittleFS");
+    return;
+  }
   if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
   }
@@ -52,23 +70,25 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   // Initialize core 0
-  xTaskCreate(
+  xTaskCreatePinnedToCore(
           taskCore0,    // Function to run on core 0
           "taskCore0",  // Name of the task
           10000,        // Stack size (bytes)
           NULL,         // Parameter to pass to the task
           1,            // Priority (0 = lowest, 1 = default, 2 = highest)
-          NULL          // Task handle
+          &Task0,       // Task handle
+          0             // Core0
   );
 
   // Initialize core 1
-  xTaskCreate(
+  xTaskCreatePinnedToCore(
           taskCore1,    // Function to run on core 1
           "taskCore1",  // Name of the task
           10000,        // Stack size (bytes)
           NULL,         // Parameter to pass to the task
           1,            // Priority
-          NULL          // Task handle
+          &Task1,       // Task handle
+          0             // Core1 - updated based on ESP32C6 LP core not addressable
   );
 }
 
@@ -115,13 +135,21 @@ void ProcessUpdates() {
 
   uint32_t delta = stopTime.getStamp() - startTime.getStamp();
   char zip_time[9];
-  sprintf(zip_time, "%7.3f", delta / 1000.0); 
+  sprintf(zip_time, "%7.3f", delta / 1000.0);
   String s = "{\"zip_time\":" + String(zip_time) + "}";
   server.send(200, "application/json", s);
   Serial.println(s);
 }
 
 void ProcessRoot() {
-  server.send(200, "text/html", char_html);
+  File file = LittleFS.open("/index.html", "r");
+  if (!file) {
+    Serial.println("Failed to open file for reading");
+    return;
+  }
+  String fileContent = file.readString();
+  file.close();
+  // Serial.println(fileContent);
+  server.send(200, "text/html", fileContent);
   Serial.println("got request from device");
 }
