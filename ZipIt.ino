@@ -9,15 +9,8 @@
 TaskHandle_t Task0;
 TaskHandle_t Task1;
 
-const char* ssid = "ZipIt";
-const char* password = "";
-
 const int startPin = D0;
-const int stopPin = D2;
-
-IPAddress local_IP(192, 168, 4, 1);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 0, 0);
+const int stopPin = D1;
 
 WebServer server(80);
 
@@ -56,10 +49,16 @@ void setup() {
     Serial.println("An Error has occurred while mounting LittleFS");
     return;
   }
+
+  IPAddress local_IP(192, 168, 4, 1);
+  IPAddress gateway(192, 168, 1, 1);
+  IPAddress subnet(255, 255, 0, 0);
   if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
   }
-
+  
+  const char* ssid = "ZipIt";
+  const char* password = "";
   WiFi.softAP(ssid, password);
 
   server.on("/", ProcessRoot);

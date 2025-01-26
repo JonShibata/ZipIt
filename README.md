@@ -12,6 +12,9 @@ URL: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_
 ESP32 by Espressif Systems
 Version: 3.1.1
 
+## SPIFFS Upload Tool
+
+[Github repo for SPIFFS upload tool](https://github.com/earlephilhower/arduino-littlefs-upload/releases)
 
 ## Wiring
 
