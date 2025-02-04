@@ -23,7 +23,7 @@ Version: 3.1.1
 
 ESP32 PIN | Device                | Pin  | Pin Description | Color
 ----------|-----------------------|------|-----------------| ------
-D0        | IR Break Beam Start   | X    | Signal          | white
+D0        | IR Break Beam Start   | X    | Signal          | white/green
 5V        | IR Break Beam Start   | X    | VCC             | red
 GND       | IR Break Beam Start   | X    | GND             | black
 5V        | IR LED Start          | X    | VCC             | red
@@ -33,4 +33,10 @@ D2        | IR Break Beam Stop    | X    | Signal          | white
 GND       | IR Break Beam Stop    | X    | VCC             | red
 5V        | IR LED Stop           | X    | VCC             | red
 GND       | IR LED Stop           | X    | GND             | black
+
+## Setup
+
+1. Connect the wiring harness to the sensors on the brackets with ESP32C6 on side of the lower bracket.
+2. Connect the device you will be using to display the timer to the Wifi SSID named `ZipIt`.
+3. Open a web browser and navigate to 192.168.4.1.
  
