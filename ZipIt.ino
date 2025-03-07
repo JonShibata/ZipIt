@@ -9,6 +9,7 @@
 TaskHandle_t Task0;
 TaskHandle_t Task1;
 
+
 const int startPin = D0;
 const int stopPin = D1;
 
@@ -19,6 +20,7 @@ TimeStamp stopTime;
 
 int isStartPrev = 0;
 int isStopPrev = 0;
+bool startDetected = false;
 
 void listLittleFsFiles() {
   Serial.println("Listing LittleFS files:");
@@ -56,7 +58,7 @@ void setup() {
   if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
   }
-  
+
   const char* ssid = "ZipIt";
   const char* password = "";
   WiFi.softAP(ssid, password);
@@ -70,24 +72,24 @@ void setup() {
 
   // Initialize core 0
   xTaskCreatePinnedToCore(
-          taskCore0,    // Function to run on core 0
-          "taskCore0",  // Name of the task
-          10000,        // Stack size (bytes)
-          NULL,         // Parameter to pass to the task
-          1,            // Priority (0 = lowest, 1 = default, 2 = highest)
-          &Task0,       // Task handle
-          0             // Core0
+      taskCore0,    // Function to run on core 0
+      "taskCore0",  // Name of the task
+      10000,        // Stack size (bytes)
+      NULL,         // Parameter to pass to the task
+      1,            // Priority (0 = lowest, 1 = default, 2 = highest)
+      &Task0,       // Task handle
+      0             // Core0
   );
 
   // Initialize core 1
   xTaskCreatePinnedToCore(
-          taskCore1,    // Function to run on core 1
-          "taskCore1",  // Name of the task
-          10000,        // Stack size (bytes)
-          NULL,         // Parameter to pass to the task
-          1,            // Priority
-          &Task1,       // Task handle
-          0             // Core1 - updated based on ESP32C6 LP core not addressable
+      taskCore1,    // Function to run on core 1
+      "taskCore1",  // Name of the task
+      10000,        // Stack size (bytes)
+      NULL,         // Parameter to pass to the task
+      1,            // Priority
+      &Task1,       // Task handle
+      0             // Core1 - updated based on ESP32C6 LP core not addressable
   );
 }
 
@@ -101,16 +103,22 @@ void taskCore0(void* parameter) {
       Serial.println(">>> Start time set");
       startTime.setStamp(millis());
       stopTime.setStamp(millis());
+      startDetected = true;
       ProcessUpdates();
     }
     isStartPrev = isStart;
 
     bool isStop = digitalRead(stopPin);
+
     if (isStop == LOW && isStopPrev == HIGH) {
-      Serial.println("<<< Stop time set");
-      stopTime.setStamp(millis());
-      uint32_t delta = stopTime.getStamp() - startTime.getStamp();
-      ProcessUpdates();
+      Serial.println("--- Gate tripped");
+      if (startDetected) {
+        Serial.println("<<< Stop time set");
+        stopTime.setStamp(millis());
+        uint32_t delta = stopTime.getStamp() - startTime.getStamp();
+        startDetected = false;
+        ProcessUpdates();
+      }
     }
     isStopPrev = isStop;
   }

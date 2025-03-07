@@ -40,3 +40,16 @@ GND       | IR LED Stop           | X    | GND             | black
 2. Connect the device you will be using to display the timer to the Wifi SSID named `ZipIt`.
 3. Open a web browser and navigate to 192.168.4.1.
  
+
+## wsl USB connection
+
+Find the USB device to connect to the WSL2 VM
+
+```bash
+usbipd list
+```
+Bind and attach the device to the WSL2 VM
+```bash
+usbipd bind --busid=1-4
+usbipd attach --wsl --busid 1-4
+```
