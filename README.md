@@ -12,9 +12,13 @@ URL: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_
 ESP32 by Espressif Systems
 Version: 3.1.1
 
-## SPIFFS Upload Tool
+## LIttleFS Upload Tool
 
-[Github repo for SPIFFS upload tool](https://github.com/earlephilhower/arduino-littlefs-upload/releases)
+Use PlatformIO to upload the LittleFS filesystem to the ESP32.
+
+```bash
+pio run -t uploadfs
+```
 
 ## Wiring
 

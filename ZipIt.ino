@@ -52,6 +52,13 @@ void setup() {
     return;
   }
 
+  // Check if the file exists
+  if (LittleFS.exists("/index.html")) {
+    Serial.println("File exists");
+  } else {
+    Serial.println("File does not exist");
+  }
+
   IPAddress local_IP(192, 168, 4, 1);
   IPAddress gateway(192, 168, 1, 1);
   IPAddress subnet(255, 255, 0, 0);

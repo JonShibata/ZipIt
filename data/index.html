@@ -1,4 +1,5 @@
 <HTML>
+
 <HEAD>
   <title>ZipIt</title>
   <style>
@@ -7,10 +8,12 @@
       color: black;
       font-size: 100px;
     }
-    table{
+
+    table {
       margin-left: auto;
       margin-right: auto;
     }
+
     .rect {
       width: 100%;
       height: 100%;
@@ -25,56 +28,60 @@
       cursor: pointer;
       font-family: monospace;
     }
+
     .WhiteBG {
       background-color: #FFFFFF;
     }
+
     .BlueBG {
       background-color: #6db7fc;
     }
+
     .GreenBG {
       background-color: #5eff5e;
     }
+
     .GreyBG {
       background-color: #888888;
     }
+
     .GreyBG15 {
       background-color: #888888;
       height: 15%;
     }
+
     .RedBG {
       background-color: #ff2222;
     }
+
     .YellowBG {
       background-color: #CCCC00;
     }
+
     .Title {
       text-align: right;
     }
+
     .Units {
       text-align: left;
     }
+
     .Debug {
       color: #444;
     }
   </style>
 </head>
+
 <body>
-<br><br>
-<table width=100%>
-  <col width=50%>
-  <col width=50%>
-  <tr>
-    <td> <text class='rect WhiteBG Title'>Zip Time: &nbsp;</text> </td>
-    <td> <text id='zip_time' class='rect WhiteBG Units'>   x.xxx sec</text> </td>
-  </tr>
-</table>
-<font size=20px><br></font>
-<table width=50%>
-  <col width=100%>
-  <tr>
-    <td><text id='Reset' class='rect BlueBG'> RESET </text> </td>
-  </tr>
-</table>
+  <br><br>
+  <table width=100%>
+    <col width=50%>
+    <col width=50%>
+    <tr>
+      <td> <text class='rect WhiteBG Title'>Zip Time: &nbsp;</text> </td>
+      <td> <text id='zip_time' class='rect WhiteBG Units'> x.xxx sec</text> </td>
+    </tr>
+  </table>
 </body>
 <script>
   document.getElementById('Reset').onclick = Reset;
@@ -117,4 +124,5 @@
   }
 
 </script>
+
 </html>
