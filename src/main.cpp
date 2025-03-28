@@ -86,7 +86,6 @@ void taskCore0(void* parameter) {
       if (startDetected) {
         Serial.println("<<< Stop time set");
         stopTime.setStamp(millis());
-        uint32_t delta = stopTime.getStamp() - startTime.getStamp();
         startDetected = false;
         ProcessUpdates();
       }
@@ -101,8 +100,6 @@ void taskCore1(void* parameter) {
     server.handleClient();
   }
 }
-
-
 
 
 void setup() {
@@ -171,4 +168,3 @@ void setup() {
 }
 
 void loop() {}
-

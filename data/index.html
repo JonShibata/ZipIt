@@ -84,7 +84,7 @@
   </table>
 </body>
 <script>
-  document.getElementById('Reset').onclick = Reset;
+
   let b_InitComplete = sessionStorage.getItem('b_InitComplete');
   if (b_InitComplete != 'true') {
     sessionStorage.setItem('b_InitComplete', 'true');
@@ -111,11 +111,6 @@
       xhttp.send();
     }
     sessionStorage.setItem('Cnt_Loops', Cnt_Loops);
-  }
-
-  function Reset() {
-    sessionStorage.setItem('Cnt_Loops', 0);
-    document.getElementById('zip_time').innerHTML = 0.000.toFixed(3).padStart(7, ' ') + ' sec';
   }
 
   function beep() {
