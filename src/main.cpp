@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include "Timestamp/src/TimeStamp.hpp"
+#include <TimeStamp.hpp>
 #include <stdint.h>
 #include <LittleFS.h>
 
