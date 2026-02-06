@@ -1,5 +1,12 @@
 # ZipIt WESO timer 
 
+## Setup
+
+1. Connect the wiring harness to the sensors on the brackets with ESP32C6 on side of the lower bracket.
+2. Connect the device you will be using to display the timer to the Wifi SSID named `ZipIt`.
+3. Open a web browser and navigate to 192.168.4.1.
+
+
 ## Hardware
 
 [XIAO ESP32C6](https://wiki.seeedstudio.com/xiao_esp32c6_getting_started/)
@@ -37,13 +44,6 @@ D2        | IR Break Beam Stop    | X    | Signal          | white
 GND       | IR Break Beam Stop    | X    | VCC             | red
 5V        | IR LED Stop           | X    | VCC             | red
 GND       | IR LED Stop           | X    | GND             | black
-
-## Setup
-
-1. Connect the wiring harness to the sensors on the brackets with ESP32C6 on side of the lower bracket.
-2. Connect the device you will be using to display the timer to the Wifi SSID named `ZipIt`.
-3. Open a web browser and navigate to 192.168.4.1.
- 
 
 ## wsl USB connection
 
