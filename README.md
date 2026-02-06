@@ -4,8 +4,10 @@
 
 1. Connect the wiring harness to the sensors on the brackets with ESP32C6 on side of the lower bracket.
 2. Connect the device you will be using to display the timer to the Wifi SSID named `ZipIt`.
-3. Open a web browser and navigate to 192.168.4.1.
-
+3. Open a web browser and navigate to:
+```
+192.168.4.1
+```
 
 ## Hardware
 
